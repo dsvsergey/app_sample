@@ -18,8 +18,7 @@ class ProductRepository {
   }) async {
     await Future.delayed(const Duration(milliseconds: 300));
 
-    List<Product> allProducts =
-        await getProducts(); // Call getProducts() to get the list
+    List<Product> allProducts = await getProducts();
     List<Product> filteredProducts = allProducts.where((product) {
       bool categoryMatch = category == 'all' || product.category == category;
       bool stockMatch = !showOnlyInStock || product.inStock;
