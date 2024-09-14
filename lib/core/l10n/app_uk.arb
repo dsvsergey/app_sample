@@ -40,5 +40,8 @@
     "goToNextScreen": "Перейти до наступного екрану",
     "secondScreen": "Другий екран",
     "progressBarTitle": "Індикатор прогресу",
-    "rotatingIndicatorTitle": "Обертовий індикатор"
+    "rotatingIndicatorTitle": "Обертовий індикатор",
+    "productList": "Список продуктів",
+    "addedToCart": "додано до кошика",
+    "error": "Помилка"
 }

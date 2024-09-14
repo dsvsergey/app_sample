@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../repositories/animation_repository.dart';
 import 'second_screen.dart';
 
-class AnimationScreen extends StatelessWidget {
+class AnimationScreen extends ConsumerWidget {
   const AnimationScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
@@ -45,37 +47,43 @@ class AnimationScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          const SecondScreen(),
-                      transitionDuration: const Duration(milliseconds: 500),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        var begin = const Offset(1.0, 0.0);
-                        var end = Offset.zero;
-                        var curve = Curves.easeInOut;
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
+                onPressed: () async {
+                  await ref
+                      .read(animationRepositoryProvider)
+                      .performAnimation();
+                  if (context.mounted) {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            const SecondScreen(),
+                        transitionDuration: const Duration(milliseconds: 500),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          var begin = const Offset(1.0, 0.0);
+                          var end = Offset.zero;
+                          var curve = Curves.easeInOut;
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+                          var offsetAnimation = animation.drive(tween);
 
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: ScaleTransition(
-                            scale: Tween<double>(begin: 0.5, end: 1.0).animate(
-                              CurvedAnimation(
-                                  parent: animation, curve: Curves.easeInOut),
+                          return SlideTransition(
+                            position: offsetAnimation,
+                            child: ScaleTransition(
+                              scale:
+                                  Tween<double>(begin: 0.5, end: 1.0).animate(
+                                CurvedAnimation(
+                                    parent: animation, curve: Curves.easeInOut),
+                              ),
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              ),
                             ),
-                            child: FadeTransition(
-                              opacity: animation,
-                              child: child,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
+                          );
+                        },
+                      ),
+                    );
+                  }
                 },
               ),
             ],

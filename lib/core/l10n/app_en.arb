@@ -40,5 +40,8 @@
     "goToNextScreen": "Go to Next Screen",
     "secondScreen": "Second Screen",
     "progressBarTitle": "Progress Bar",
-    "rotatingIndicatorTitle": "Rotating Indicator"
+    "rotatingIndicatorTitle": "Rotating Indicator",
+    "productList": "Product List",
+    "addedToCart": "added to cart",
+    "error": "Error"
 }

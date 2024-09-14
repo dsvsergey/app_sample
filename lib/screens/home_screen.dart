@@ -55,8 +55,8 @@ class HomeScreen extends StatelessWidget {
                   context,
                   title: l10n.networking,
                   icon: Icons.cloud,
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const FormScreen())),
+                  onTap: () => Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => FormScreen())),
                 ),
                 const SizedBox(height: 20),
                 _buildFeatureCard(
