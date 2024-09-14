@@ -55,7 +55,15 @@ class ProductListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     final filterState = ref.watch(productFilterStateProvider);
     final productsAsyncValue = ref.watch(filteredProductsProvider(
       filterState.selectedCategory,

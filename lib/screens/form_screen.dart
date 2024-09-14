@@ -60,7 +60,15 @@ class FormScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     final formState = ref.watch(formStateProvider);
 
     Future<void> submitForm() async {
@@ -102,110 +110,114 @@ class FormScreen extends ConsumerWidget {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            _buildTextField(
-                              label: l10n.userName,
-                              icon: Icons.person,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return l10n.nameRequired;
-                                }
-                                if (value.length < 2) {
-                                  return l10n.nameMinLength;
-                                }
-                                return null;
-                              },
-                              onChanged: ref
-                                  .read(formStateProvider.notifier)
-                                  .updateName,
-                              initialValue: formState.name,
-                            ),
-                            const SizedBox(height: 16),
-                            _buildTextField(
-                              label: l10n.email,
-                              icon: Icons.email,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return l10n.emailRequired;
-                                }
-                                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                    .hasMatch(value)) {
-                                  return l10n.emailInvalid;
-                                }
-                                return null;
-                              },
-                              onChanged: ref
-                                  .read(formStateProvider.notifier)
-                                  .updateEmail,
-                              initialValue: formState.email,
-                            ),
-                            const SizedBox(height: 16),
-                            _buildTextField(
-                              label: l10n.phone,
-                              icon: Icons.phone,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return l10n.phoneRequired;
-                                }
-                                if (!RegExp(r'^\+?[0-9]{10,14}$')
-                                    .hasMatch(value)) {
-                                  return l10n.phoneInvalid;
-                                }
-                                return null;
-                              },
-                              onChanged: ref
-                                  .read(formStateProvider.notifier)
-                                  .updatePhone,
-                              initialValue: formState.phone,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    ElevatedButton(
-                      onPressed: formState.isLoading ? null : submitForm,
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 4,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: formState.isLoading
-                            ? const SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
+          child: Center(
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                _buildTextField(
+                                  label: l10n.userName,
+                                  icon: Icons.person,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return l10n.nameRequired;
+                                    }
+                                    if (value.length < 2) {
+                                      return l10n.nameMinLength;
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: ref
+                                      .read(formStateProvider.notifier)
+                                      .updateName,
+                                  initialValue: formState.name,
                                 ),
-                              )
-                            : Text(
-                                l10n.submit,
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                      ),
+                                const SizedBox(height: 16),
+                                _buildTextField(
+                                  label: l10n.email,
+                                  icon: Icons.email,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return l10n.emailRequired;
+                                    }
+                                    if (!RegExp(
+                                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                        .hasMatch(value)) {
+                                      return l10n.emailInvalid;
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: ref
+                                      .read(formStateProvider.notifier)
+                                      .updateEmail,
+                                  initialValue: formState.email,
+                                ),
+                                const SizedBox(height: 16),
+                                _buildTextField(
+                                  label: l10n.phone,
+                                  icon: Icons.phone,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return l10n.phoneRequired;
+                                    }
+                                    if (!RegExp(r'^\+?[0-9]{10,14}$')
+                                        .hasMatch(value)) {
+                                      return l10n.phoneInvalid;
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: ref
+                                      .read(formStateProvider.notifier)
+                                      .updatePhone,
+                                  initialValue: formState.phone,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: formState.isLoading ? null : submitForm,
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 4,
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          ),
+                          child: formState.isLoading
+                              ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                  ),
+                                )
+                              : Text(
+                                  l10n.submit,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
